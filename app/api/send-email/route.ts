@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request: NextRequest) {
   try {
     console.log('=== EMAIL API CHAMADA ===')
@@ -16,6 +14,8 @@ export async function POST(request: NextRequest) {
         message: 'A chave da API do Resend não foi encontrada nas variáveis de ambiente'
       }, { status: 500 })
     }
+
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
     console.log('✓ RESEND_API_KEY está configurada')
     console.log('API Key (primeiros 10 caracteres):', process.env.RESEND_API_KEY.substring(0, 10) + '...')
