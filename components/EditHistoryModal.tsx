@@ -1,7 +1,8 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { EditHistory } from '@/lib/supabase'
-import { ptBR, it } from 'date-fns/locale'
 import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale/pt-BR'
+import { it } from 'date-fns/locale/it'
 
 type EditHistoryModalProps = {
     orderId: string
