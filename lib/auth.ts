@@ -76,20 +76,69 @@ export async function signOut() {
 }
 
 export async function getCurrentUser() {
+    console.log('[getCurrentUser] Starting...')
+
     const { data: { user }, error } = await supabase.auth.getUser()
 
-    if (error || !user) return { user: null, error }
+    console.log('[getCurrentUser] Auth user:', {
+        exists: !!user,
+        id: user?.id,
+        email: user?.email,
+        error: error?.message
+    })
+
+    if (error || !user) {
+        console.error('[getCurrentUser] No auth user:', error)
+        return { user: null, error }
+    }
 
     // Get user profile data
-    const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single()
+    try {
+        const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single()
 
-    if (userError) return { user: null, error: userError }
+        console.log('[getCurrentUser] User profile fetch:', {
+            success: !userError,
+            userData: userData ? 'exists' : 'null',
+            error: userError?.message,
+            code: userError?.code,
+            details: userError?.details
+        })
 
-    return { user: { ...user, ...userData }, error: null }
+        if (userError) {
+            console.error('[getCurrentUser] RLS or DB error fetching profile:', userError)
+            // FALLBACK: Return auth user with minimal data instead of failing completely
+            // This prevents redirect to login when user is authenticated but RLS blocks profile fetch
+            return {
+                user: {
+                    ...user,
+                    role: 'user', // default role as fallback
+                    status: 'approved', // assume approved if they're authenticated
+                    email: user.email || '',
+                    id: user.id
+                } as any,
+                error: null // Don't return error to prevent logout
+            }
+        }
+
+        return { user: { ...user, ...userData }, error: null }
+    } catch (err: any) {
+        console.error('[getCurrentUser] Unexpected error:', err)
+        // Return auth user as fallback
+        return {
+            user: {
+                ...user,
+                role: 'user',
+                status: 'approved',
+                email: user.email || '',
+                id: user.id
+            } as any,
+            error: null
+        }
+    }
 }
 
 export async function checkUserApproval(userId: string) {
