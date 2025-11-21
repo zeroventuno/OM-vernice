@@ -15,6 +15,7 @@ export default function EditOrderPage() {
 
     useEffect(() => {
         async function loadOrder() {
+            console.log('[EditOrderPage] Loading order:', orderId)
             try {
                 const { data, error } = await supabase
                     .from('orders')
@@ -22,16 +23,36 @@ export default function EditOrderPage() {
                     .eq('id', orderId)
                     .single()
 
-                if (error) throw error
+                console.log('[EditOrderPage] Supabase response:', { data, error })
+
+                if (error) {
+                    console.error('[EditOrderPage] Supabase error:', error)
+                    throw error
+                }
+
+                if (!data) {
+                    console.warn('[EditOrderPage] No data returned for order:', orderId)
+                }
+
                 setOrder(data)
-            } catch (error) {
-                console.error('Error loading order:', error)
+            } catch (error: any) {
+                console.error('[EditOrderPage] Error loading order:', error)
+                console.error('[EditOrderPage] Error details:', {
+                    message: error?.message,
+                    details: error?.details,
+                    hint: error?.hint,
+                    code: error?.code
+                })
+                // Set order to null to show "not found" message
+                setOrder(null)
             } finally {
                 setLoading(false)
             }
         }
 
-        loadOrder()
+        if (orderId) {
+            loadOrder()
+        }
     }, [orderId])
 
     if (loading) {
