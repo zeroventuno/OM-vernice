@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     title: 'Verniciatura - Officine Mattio',
     description: 'Sistema de Gestão de Pedidos de Pintura de Bicicletas',
     icons: {
-        icon: '/favicon.svg',
+        icon: '/favicon.png',
     },
 }
 
