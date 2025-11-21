@@ -1,8 +1,5 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { EditHistory } from '@/lib/supabase'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale/pt-BR'
-import { it } from 'date-fns/locale/it'
 
 type EditHistoryModalProps = {
     orderId: string
@@ -10,9 +7,23 @@ type EditHistoryModalProps = {
     onClose: () => void
 }
 
+// Simple date formatter without date-fns locales to avoid Vercel bundling issues
+function formatDate(dateString: string): string {
+    try {
+        const date = new Date(dateString)
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = date.getFullYear()
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        return `${day}/${month}/${year} às ${hours}:${minutes}`
+    } catch (e) {
+        return dateString
+    }
+}
+
 export default function EditHistoryModal({ orderId, history, onClose }: EditHistoryModalProps) {
     const { t, language } = useLanguage()
-    const dateLocale = language === 'it' ? it : ptBR
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -86,13 +97,7 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                                             color: 'var(--color-text-tertiary)',
                                             textAlign: 'right'
                                         }}>
-                                            {(() => {
-                                                try {
-                                                    return format(new Date(item.edited_at), "dd/MM/yyyy 'às' HH:mm", { locale: dateLocale })
-                                                } catch (e) {
-                                                    return item.edited_at
-                                                }
-                                            })()}
+                                            {formatDate(item.edited_at)}
                                         </div>
                                     </div>
 
