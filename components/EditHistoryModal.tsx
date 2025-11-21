@@ -85,7 +85,13 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                                             color: 'var(--color-text-tertiary)',
                                             textAlign: 'right'
                                         }}>
-                                            {format(new Date(item.edited_at), "dd/MM/yyyy 'às' HH:mm", { locale: dateLocale })}
+                                            {(() => {
+                                                try {
+                                                    return format(new Date(item.edited_at), "dd/MM/yyyy 'às' HH:mm", { locale: dateLocale })
+                                                } catch (e) {
+                                                    return item.edited_at
+                                                }
+                                            })()}
                                         </div>
                                     </div>
 
