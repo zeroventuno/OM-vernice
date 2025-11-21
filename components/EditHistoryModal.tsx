@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { EditHistory } from '@/lib/supabase'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale/pt-BR'
+import { it } from 'date-fns/locale/it'
 
 type EditHistoryModalProps = {
     orderId: string
@@ -9,35 +10,15 @@ type EditHistoryModalProps = {
     onClose: () => void
 }
 
-const fieldLabels: Record<string, string> = {
-    ordem: 'Ordem',
-    matricula_quadro: 'Matrícula do Quadro',
-    modelo: 'Modelo',
-    tamanho: 'Tamanho',
-    agente_comercial: 'Agente Comercial',
-    catalogo_2026: 'Catálogo 2026',
-    cor_base: 'Cor Base',
-    acabamento_base: 'Acabamento Base',
-    acabamento_base_rock: 'Base Rock',
-    cor_detalhes: 'Cor Detalhes',
-    acabamento_detalhes: 'Acabamento Detalhes',
-    acabamento_detalhes_rock: 'Detalhes Rock',
-    cor_logo: 'Cor Logo',
-    acabamento_logo: 'Acabamento Logo',
-    acabamento_logo_rock: 'Logo Rock',
-    cor_letras: 'Cor Letras',
-    acabamento_letras: 'Acabamento Letras',
-    acabamento_letras_rock: 'Letras Rock',
-    pedidos_extras: 'Pedidos Extras',
-    created: 'Criação'
-}
-
 export default function EditHistoryModal({ orderId, history, onClose }: EditHistoryModalProps) {
+    const { t, language } = useLanguage()
+    const dateLocale = language === 'it' ? it : ptBR
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal" style={{ width: '800px', maxWidth: '90vw' }} onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h3 style={{ margin: 0 }}>Histórico de Edições</h3>
+                    <h3 style={{ margin: 0 }}>{t.orders.editHistory.title}</h3>
                     <button
                         onClick={onClose}
                         style={{
@@ -64,7 +45,7 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                             padding: 'var(--spacing-2xl)',
                             color: 'var(--color-text-tertiary)'
                         }}>
-                            <p>Nenhuma edição registrada</p>
+                            <p>{t.orders.editHistory.empty}</p>
                         </div>
                     ) : (
                         <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
@@ -91,13 +72,13 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                                                 color: 'var(--color-text)',
                                                 marginBottom: 'var(--spacing-xs)'
                                             }}>
-                                                {fieldLabels[item.field_name] || item.field_name}
+                                                {t.orders.editHistory.fields[item.field_name as keyof typeof t.orders.editHistory.fields] || item.field_name}
                                             </div>
                                             <div style={{
                                                 fontSize: '0.875rem',
                                                 color: 'var(--color-text-secondary)'
                                             }}>
-                                                {item.user?.email || 'Usuário desconhecido'}
+                                                {item.user?.email || t.orders.editHistory.unknownUser}
                                             </div>
                                         </div>
                                         <div style={{
@@ -105,7 +86,7 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                                             color: 'var(--color-text-tertiary)',
                                             textAlign: 'right'
                                         }}>
-                                            {format(new Date(item.edited_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                                            {format(new Date(item.edited_at), "dd/MM/yyyy 'às' HH:mm", { locale: dateLocale })}
                                         </div>
                                     </div>
 
@@ -130,9 +111,9 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                                                     fontWeight: 600,
                                                     marginBottom: 'var(--spacing-xs)'
                                                 }}>
-                                                    Anterior
+                                                    {t.orders.editHistory.previous}
                                                 </div>
-                                                {item.old_value || '(vazio)'}
+                                                {item.old_value || t.orders.editHistory.emptyValue}
                                             </div>
                                             <div style={{ color: 'var(--color-text-tertiary)' }}>→</div>
                                             <div style={{
@@ -148,9 +129,9 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                                                     fontWeight: 600,
                                                     marginBottom: 'var(--spacing-xs)'
                                                 }}>
-                                                    Novo
+                                                    {t.orders.editHistory.new}
                                                 </div>
-                                                {item.new_value || '(vazio)'}
+                                                {item.new_value || t.orders.editHistory.emptyValue}
                                             </div>
                                         </div>
                                     )}
@@ -175,7 +156,7 @@ export default function EditHistoryModal({ orderId, history, onClose }: EditHist
                 </div>
                 <div className="modal-footer">
                     <button onClick={onClose} className="btn btn-secondary">
-                        Fechar
+                        {t.orders.editHistory.close}
                     </button>
                 </div>
             </div>

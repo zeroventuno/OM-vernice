@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { supabase, type Order } from '@/lib/supabase'
 import OrderForm from '@/components/OrderForm'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function EditOrderPage() {
+    const { t } = useLanguage()
     const params = useParams()
     const orderId = params.id as string
     const [order, setOrder] = useState<Order | null>(null)
@@ -48,9 +50,9 @@ export default function EditOrderPage() {
     if (!order) {
         return (
             <div>
-                <h1>Pedido não encontrado</h1>
+                <h1>{t.orders.editOrderPage.notFound}</h1>
                 <a href="/orders" className="btn btn-primary" style={{ marginTop: 'var(--spacing-lg)' }}>
-                    Voltar para Pedidos
+                    {t.orders.editOrderPage.backToOrders}
                 </a>
             </div>
         )
@@ -59,8 +61,8 @@ export default function EditOrderPage() {
     return (
         <div>
             <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-                <h1>Editar Pedido</h1>
-                <p className="text-muted">Atualize os dados do pedido {order.ordem}</p>
+                <h1>{t.orders.editOrderPage.title}</h1>
+                <p className="text-muted">{t.orders.editOrderPage.subtitle} {order.ordem}</p>
             </div>
 
             <div className="card">

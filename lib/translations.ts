@@ -110,6 +110,43 @@ export const translations = {
             saveError: 'Erro ao salvar pedido',
             createFirst: 'Criar Primeiro Pedido',
             newOrderSubtitle: 'Preencha os dados para criar um novo pedido de pintura',
+            editOrderPage: {
+                title: 'Editar Pedido',
+                subtitle: 'Atualize os dados do pedido',
+                notFound: 'Pedido não encontrado',
+                backToOrders: 'Voltar para Pedidos'
+            },
+            editHistory: {
+                title: 'Histórico de Edições',
+                empty: 'Nenhuma edição registrada',
+                unknownUser: 'Usuário desconhecido',
+                previous: 'Anterior',
+                new: 'Novo',
+                emptyValue: '(vazio)',
+                close: 'Fechar',
+                fields: {
+                    ordem: 'Ordem',
+                    matricula_quadro: 'Matrícula do Quadro',
+                    modelo: 'Modelo',
+                    tamanho: 'Tamanho',
+                    agente_comercial: 'Agente Comercial',
+                    catalogo_2026: 'Catálogo 2026',
+                    cor_base: 'Cor Base',
+                    acabamento_base: 'Acabamento Base',
+                    acabamento_base_rock: 'Base Rock',
+                    cor_detalhes: 'Cor Detalhes',
+                    acabamento_detalhes: 'Acabamento Detalhes',
+                    acabamento_detalhes_rock: 'Detalhes Rock',
+                    cor_logo: 'Cor Logo',
+                    acabamento_logo: 'Acabamento Logo',
+                    acabamento_logo_rock: 'Logo Rock',
+                    cor_letras: 'Cor Letras',
+                    acabamento_letras: 'Acabamento Letras',
+                    acabamento_letras_rock: 'Letras Rock',
+                    pedidos_extras: 'Pedidos Extras',
+                    created: 'Criação'
+                }
+            }
         },
         users: {
             title: 'Usuários',
@@ -241,6 +278,43 @@ export const translations = {
             saveError: 'Errore durante il salvataggio dell\'ordine',
             createFirst: 'Crea Primo Ordine',
             newOrderSubtitle: 'Compila i dati per creare un nuovo ordine di verniciatura',
+            editOrderPage: {
+                title: 'Modifica Ordine',
+                subtitle: 'Aggiorna i dati dell\'ordine',
+                notFound: 'Ordine non trovato',
+                backToOrders: 'Torna agli Ordini'
+            },
+            editHistory: {
+                title: 'Cronologia Modifiche',
+                empty: 'Nessuna modifica registrata',
+                unknownUser: 'Utente sconosciuto',
+                previous: 'Precedente',
+                new: 'Nuovo',
+                emptyValue: '(vuoto)',
+                close: 'Chiudi',
+                fields: {
+                    ordem: 'Ordine',
+                    matricula_quadro: 'Matricola Telaio',
+                    modelo: 'Modello',
+                    tamanho: 'Taglia',
+                    agente_comercial: 'Agente Commerciale',
+                    catalogo_2026: 'Catalogo 2026',
+                    cor_base: 'Colore Base',
+                    acabamento_base: 'Finitura Base',
+                    acabamento_base_rock: 'Base Rock',
+                    cor_detalhes: 'Colore Dettagli',
+                    acabamento_detalhes: 'Finitura Dettagli',
+                    acabamento_detalhes_rock: 'Dettagli Rock',
+                    cor_logo: 'Colore Logo',
+                    acabamento_logo: 'Finitura Logo',
+                    acabamento_logo_rock: 'Logo Rock',
+                    cor_letras: 'Colore Scritte',
+                    acabamento_letras: 'Finitura Scritte',
+                    acabamento_letras_rock: 'Scritte Rock',
+                    pedidos_extras: 'Richieste Extra',
+                    created: 'Creazione'
+                }
+            }
         },
         users: {
             title: 'Utenti',
