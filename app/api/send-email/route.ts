@@ -20,12 +20,13 @@ export async function POST(request: NextRequest) {
     console.log('✓ RESEND_API_KEY está configurada')
     console.log('API Key (primeiros 10 caracteres):', process.env.RESEND_API_KEY.substring(0, 10) + '...')
 
-    const { orderData, userEmail } = await request.json()
+    const { orderData, userEmail, subject } = await request.json()
 
     console.log('📧 Preparando email...')
     console.log('Destinatário:', 'matteo@officinemattio.com')
     console.log('Remetente:', userEmail)
-    console.log('Assunto:', `Novo Pedido de Pintura - ${orderData.ordem}`)
+    const emailSubject = subject || `Novo Pedido de Pintura - ${orderData.ordem}`
+    console.log('Assunto:', emailSubject)
 
     const emailHtml = `
       <!DOCTYPE html>
@@ -47,11 +48,11 @@ export async function POST(request: NextRequest) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Novo Pedido de Pintura</h1>
+              <h1>${subject ? 'Pedido Modificado' : 'Novo Pedido de Pintura'}</h1>
               <p>Sistema Verniciatura - Officine Mattio</p>
             </div>
             <div class="content">
-              <p><strong>Criado por:</strong> ${userEmail}</p>
+              <p><strong>${subject ? 'Modificado por' : 'Criado por'}:</strong> ${userEmail}</p>
               <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
               
               <div class="section">

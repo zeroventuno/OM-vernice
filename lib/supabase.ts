@@ -38,6 +38,7 @@ export type Order = {
     created_by: string
     created_at: string
     updated_at: string
+    status: 'pending' | 'completed'
 }
 
 export type EditHistory = {

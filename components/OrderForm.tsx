@@ -118,10 +118,10 @@ export default function OrderForm({ initialData, isEdit = false, orderId, onSucc
                     .eq('id', orderId)
                     .single()
 
-                // Update order
+                // Update order - set status back to pending on edit
                 const { error: updateError } = await supabase
                     .from('orders')
-                    .update(formData)
+                    .update({ ...formData, status: 'pending' })
                     .eq('id', orderId)
 
                 if (updateError) throw updateError
@@ -130,11 +130,18 @@ export default function OrderForm({ initialData, isEdit = false, orderId, onSucc
                 if (oldData) {
                     await trackChanges(oldData, formData, orderId, user.id)
                 }
+
+                // Send modification email
+                await sendEmailNotification(
+                    { ...formData, ordem: oldData.ordem }, // Ensure we have the order number
+                    user.email,
+                    `Ordem (#${oldData.ordem}) foi modificada`
+                )
             } else {
-                // Create new order
+                // Create new order - default status is pending
                 const { data, error: insertError } = await supabase
                     .from('orders')
-                    .insert([{ ...formData, created_by: user.id }])
+                    .insert([{ ...formData, created_by: user.id, status: 'pending' }])
                     .select()
                     .single()
 
@@ -189,12 +196,18 @@ export default function OrderForm({ initialData, isEdit = false, orderId, onSucc
         }])
     }
 
-    async function sendEmailNotification(data: any, userEmail: string) {
+    async function sendEmailNotification(data: any, userEmail: string, subject?: string) {
         try {
             await fetch('/api/send-email', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ orderData: data, userEmail })
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    orderData: data,
+                    userEmail,
+                    subject
+                }),
             })
         } catch (err) {
             console.error('Error sending email:', err)

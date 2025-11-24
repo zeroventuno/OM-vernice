@@ -29,6 +29,7 @@ export default function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([])
     const [filteredOrders, setFilteredOrders] = useState<Order[]>([])
     const [loading, setLoading] = useState(true)
+    const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'completed'>('all')
     const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set())
     const [filterText, setFilterText] = useState('')
     const [historyModal, setHistoryModal] = useState<{ orderId: string; history: EditHistory[] } | null>(null)
@@ -48,6 +49,14 @@ export default function OrdersPage() {
         }
 
         const filtered = orders.filter(order => {
+            // Status filter
+            if (statusFilter !== 'all' && order.status !== statusFilter) {
+                return false
+            }
+
+            // Text filter
+            if (!filterText) return true
+
             const searchText = filterText.toLowerCase()
             return (
                 order.ordem.toLowerCase().includes(searchText) ||
@@ -58,7 +67,7 @@ export default function OrdersPage() {
             )
         })
         setFilteredOrders(filtered)
-    }, [filterText, orders])
+    }, [filterText, statusFilter, orders])
 
     async function loadCurrentUser() {
         try {
@@ -278,6 +287,21 @@ export default function OrdersPage() {
         }
 
         await generatePDF(ordersToGenerate)
+
+        // Mark orders as completed
+        try {
+            const { error } = await supabase
+                .from('orders')
+                .update({ status: 'completed' })
+                .in('id', ordersToGenerate.map(o => o.id))
+
+            if (error) throw error
+
+            // Reload orders to reflect status change
+            await loadOrders()
+        } catch (error) {
+            console.error('Error updating order status:', error)
+        }
     }
 
     if (loading) {
@@ -322,6 +346,39 @@ export default function OrdersPage() {
                 </a>
             </div>
 
+            {/* KPI Cards */}
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: 'var(--spacing-lg)',
+                marginBottom: 'var(--spacing-xl)'
+            }}>
+                <div className="card" style={{ padding: 'var(--spacing-lg)' }}>
+                    <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                        Total de Pedidos
+                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                        {orders.length}
+                    </div>
+                </div>
+                <div className="card" style={{ padding: 'var(--spacing-lg)', borderLeft: '4px solid var(--color-warning)' }}>
+                    <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                        Pedidos Pendentes
+                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-warning)' }}>
+                        {orders.filter(o => o.status === 'pending').length}
+                    </div>
+                </div>
+                <div className="card" style={{ padding: 'var(--spacing-lg)', borderLeft: '4px solid var(--color-success)' }}>
+                    <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                        Pedidos Completos
+                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-success)' }}>
+                        {orders.filter(o => o.status === 'completed').length}
+                    </div>
+                </div>
+            </div>
+
             {/* Toolbar */}
             <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
                 <div style={{
@@ -338,6 +395,29 @@ export default function OrdersPage() {
                         onChange={(e) => setFilterText(e.target.value)}
                         style={{ flex: 1, minWidth: '200px' }}
                     />
+                    <div style={{ display: 'flex', gap: 'var(--spacing-xs)' }}>
+                        <button
+                            onClick={() => setStatusFilter('all')}
+                            className={`btn ${statusFilter === 'all' ? 'btn-primary' : 'btn-secondary'}`}
+                            style={{ fontSize: '0.875rem' }}
+                        >
+                            Todos
+                        </button>
+                        <button
+                            onClick={() => setStatusFilter('pending')}
+                            className={`btn ${statusFilter === 'pending' ? 'btn-primary' : 'btn-secondary'}`}
+                            style={{ fontSize: '0.875rem' }}
+                        >
+                            Pendentes
+                        </button>
+                        <button
+                            onClick={() => setStatusFilter('completed')}
+                            className={`btn ${statusFilter === 'completed' ? 'btn-primary' : 'btn-secondary'}`}
+                            style={{ fontSize: '0.875rem' }}
+                        >
+                            Completos
+                        </button>
+                    </div>
                     <button
                         onClick={handleExportExcel}
                         className="btn btn-secondary"
@@ -409,6 +489,7 @@ export default function OrdersPage() {
                                 <th>{t.orders.extraRequests}</th>
                                 <th>{t.common.date}</th>
                                 <th style={{ width: '200px' }}>{t.common.actions}</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -495,6 +576,18 @@ export default function OrdersPage() {
                                                     </button>
                                                 )}
                                             </div>
+                                        </td>
+                                        <td>
+                                            <span style={{
+                                                padding: '0.25rem 0.75rem',
+                                                borderRadius: 'var(--radius-full)',
+                                                fontSize: '0.75rem',
+                                                fontWeight: 600,
+                                                background: order.status === 'completed' ? 'var(--color-success)' : 'var(--color-warning)',
+                                                color: 'white'
+                                            }}>
+                                                {order.status === 'completed' ? 'Completo' : 'Pendente'}
+                                            </span>
                                         </td>
                                     </tr>
                                 ))
