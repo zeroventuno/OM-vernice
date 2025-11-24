@@ -17,25 +17,35 @@ export default function DashboardLayout({
 
     useEffect(() => {
         async function checkAuth() {
+            console.log('[DashboardLayout] checkAuth starting...')
             try {
                 const { user, error } = await getCurrentUser()
 
+                console.log('[DashboardLayout] getCurrentUser result:', {
+                    hasUser: !!user,
+                    hasError: !!error,
+                    userEmail: user?.email,
+                    userStatus: user?.status,
+                    userRole: user?.role
+                })
+
                 if (error || !user) {
-                    console.error('Auth error:', error)
+                    console.error('[DashboardLayout] No user or error, redirecting to login:', error)
                     router.push('/auth/login')
                     return
                 }
 
                 if (user.status !== 'approved') {
-                    console.warn('User not approved:', user.status)
+                    console.warn('[DashboardLayout] User not approved, redirecting to login. Status:', user.status)
                     router.push('/auth/login')
                     return
                 }
 
+                console.log('[DashboardLayout] Auth check passed, setting user')
                 setUser(user)
                 setLoading(false)
             } catch (err) {
-                console.error('Unexpected auth error:', err)
+                console.error('[DashboardLayout] Unexpected auth error:', err)
                 router.push('/auth/login')
             }
         }
