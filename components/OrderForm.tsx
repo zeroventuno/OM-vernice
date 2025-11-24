@@ -50,14 +50,26 @@ export default function OrderForm({ initialData, isEdit = false, orderId }: Orde
 
     useEffect(() => {
         async function loadData() {
-            const [modelsData, agentsData, colorsData] = await Promise.all([
-                getModels(),
-                getAgents(),
-                getColors()
-            ])
-            setModels(modelsData)
-            setAgents(agentsData)
-            setColors(colorsData as any)
+            console.log('[OrderForm] Loading reference data...')
+            try {
+                const [modelsData, agentsData, colorsData] = await Promise.all([
+                    getModels(),
+                    getAgents(),
+                    getColors()
+                ])
+
+                console.log('[OrderForm] Models loaded:', modelsData)
+                console.log('[OrderForm] Agents loaded:', agentsData)
+                console.log('[OrderForm] Colors loaded:', colorsData)
+
+                setModels(modelsData)
+                setAgents(agentsData)
+                setColors(colorsData as any)
+
+                console.log('[OrderForm] State updated successfully')
+            } catch (err) {
+                console.error('[OrderForm] Error loading data:', err)
+            }
         }
         loadData()
     }, [])
