@@ -368,21 +368,21 @@ export default function OrdersPage() {
                             className={`btn ${statusFilter === 'all' ? 'btn-primary' : 'btn-secondary'}`}
                             style={{ fontSize: '0.875rem' }}
                         >
-                            Todos
+                            {t.common.all}
                         </button>
                         <button
                             onClick={() => setStatusFilter('pending')}
                             className={`btn ${statusFilter === 'pending' ? 'btn-primary' : 'btn-secondary'}`}
                             style={{ fontSize: '0.875rem' }}
                         >
-                            Pendentes
+                            {t.common.pending}
                         </button>
                         <button
                             onClick={() => setStatusFilter('completed')}
                             className={`btn ${statusFilter === 'completed' ? 'btn-primary' : 'btn-secondary'}`}
                             style={{ fontSize: '0.875rem' }}
                         >
-                            Completos
+                            {t.common.completed}
                         </button>
                     </div>
                     <button

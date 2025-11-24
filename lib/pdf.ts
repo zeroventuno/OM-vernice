@@ -207,7 +207,7 @@ function generateBoxPDF(order: Order, t: any, logoImg: HTMLImageElement) {
     yPosition += 25
     pdf.setTextColor(0, 0, 0)
 
-    // Compact Fields
+    // Compact Fields Helper
     const addCompactField = (label: string, value: string, isBold: boolean = false) => {
         if (yPosition > pageHeight - margin - 5) {
             pdf.addPage()
@@ -215,54 +215,71 @@ function generateBoxPDF(order: Order, t: any, logoImg: HTMLImageElement) {
             yPosition = margin + 5
         }
 
-        pdf.setFontSize(10)
+        pdf.setFontSize(9)
         pdf.setFont('helvetica', 'bold')
         pdf.text(label + ':', margin + 3, yPosition)
 
         pdf.setFont('helvetica', isBold ? 'bold' : 'normal')
         const val = value || '-'
 
-        const valueX = margin + 40
-        const textWidth = contentWidth - 45
+        const valueX = margin + 35
+        const textWidth = contentWidth - 40
         const lines = pdf.splitTextToSize(val, textWidth)
 
         pdf.text(lines, valueX, yPosition)
-        yPosition += (5 * lines.length) + 2
+        yPosition += (4 * lines.length) + 1
+    }
+
+    // Section Header Helper
+    const addSectionHeader = (title: string) => {
+        yPosition += 2
+        pdf.setFontSize(10)
+        pdf.setFont('helvetica', 'bold')
+        pdf.setFillColor(240, 240, 240)
+        pdf.rect(margin + 2, yPosition - 4, contentWidth - 4, 6, 'F')
+        pdf.text(title.toUpperCase(), margin + 4, yPosition)
+        yPosition += 5
     }
 
     // Main Info
-    pdf.setFontSize(11)
-    pdf.setFont('helvetica', 'bold')
-    pdf.text('INFO', margin + 3, yPosition)
-    yPosition += 6
-    pdf.line(margin + 2, yPosition - 4, pageWidth - margin - 2, yPosition - 4)
-
+    addSectionHeader('INFO')
     addCompactField(t.orders.model, order.modelo, true)
     addCompactField(t.orders.size, order.tamanho, true)
     addCompactField(t.orders.frameNumber, order.matricula_quadro)
     addCompactField(t.orders.agent, order.agente_comercial)
+    addCompactField(t.orders.catalog2026, order.catalogo_2026 ? t.common.yes : t.common.no)
 
-    yPosition += 4
-    pdf.setFontSize(11)
-    pdf.setFont('helvetica', 'bold')
-    pdf.text('COLORI', margin + 3, yPosition)
-    yPosition += 6
-    pdf.line(margin + 2, yPosition - 4, pageWidth - margin - 2, yPosition - 4)
+    // Colors
+    addSectionHeader('COLORI')
 
-    addCompactField('Base', order.cor_base)
-    addCompactField('Finish', order.acabamento_base)
-    addCompactField('Dettagli', order.cor_detalhes)
-    addCompactField('Logo', order.cor_logo)
-    addCompactField('Scritte', order.cor_letras)
+    // Base
+    addCompactField(t.orders.baseColor, order.cor_base)
+    addCompactField(t.orders.baseFinish, order.acabamento_base)
+    addCompactField(t.orders.baseRock, order.acabamento_base_rock ? t.common.yes : t.common.no)
+
+    yPosition += 2 // Spacer
+
+    // Details
+    addCompactField(t.orders.detailsColor, order.cor_detalhes)
+    addCompactField(t.orders.detailsFinish, order.acabamento_detalhes)
+    addCompactField(t.orders.detailsRock, order.acabamento_detalhes_rock ? t.common.yes : t.common.no)
+
+    yPosition += 2 // Spacer
+
+    // Logo
+    addCompactField(t.orders.logoColor, order.cor_logo)
+    addCompactField(t.orders.logoFinish, order.acabamento_logo)
+    addCompactField(t.orders.logoRock, order.acabamento_logo_rock ? t.common.yes : t.common.no)
+
+    yPosition += 2 // Spacer
+
+    // Letters
+    addCompactField(t.orders.lettersColor, order.cor_letras)
+    addCompactField(t.orders.lettersFinish, order.acabamento_letras)
+    addCompactField(t.orders.lettersRock, order.acabamento_letras_rock ? t.common.yes : t.common.no)
 
     if (order.pedidos_extras) {
-        yPosition += 4
-        pdf.setFontSize(11)
-        pdf.setFont('helvetica', 'bold')
-        pdf.text('NOTE', margin + 3, yPosition)
-        yPosition += 6
-        pdf.line(margin + 2, yPosition - 4, pageWidth - margin - 2, yPosition - 4)
-
+        addSectionHeader('NOTE')
         pdf.setFontSize(9)
         pdf.setFont('helvetica', 'normal')
         const lines = pdf.splitTextToSize(order.pedidos_extras, contentWidth - 6)

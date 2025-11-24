@@ -48,61 +48,61 @@ export async function POST(request: NextRequest) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>${subject ? 'Pedido Modificado' : 'Novo Pedido de Pintura'}</h1>
+              <h1>${subject ? 'Ordine Modificato' : 'Nuovo Ordine di Verniciatura'}</h1>
               <p>Sistema Verniciatura - Officine Mattio</p>
             </div>
             <div class="content">
-              <p><strong>${subject ? 'Modificado por' : 'Criado por'}:</strong> ${userEmail}</p>
-              <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+              <p><strong>${subject ? 'Modificato da' : 'Creato da'}:</strong> ${userEmail}</p>
+              <p><strong>Data:</strong> ${new Date().toLocaleString('it-IT')}</p>
               
               <div class="section">
-                <h3>Informações Gerais</h3>
+                <h3>Informazioni Generali</h3>
                 <div class="field">
-                  <span class="field-label">Ordem:</span>
+                  <span class="field-label">Ordine:</span>
                   <span class="field-value">${orderData.ordem}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Matrícula do Quadro:</span>
+                  <span class="field-label">Matricola Telaio:</span>
                   <span class="field-value">${orderData.matricula_quadro}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Modelo:</span>
+                  <span class="field-label">Modello:</span>
                   <span class="field-value">${orderData.modelo}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Tamanho:</span>
+                  <span class="field-label">Taglia:</span>
                   <span class="field-value">${orderData.tamanho}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Agente Comercial:</span>
+                  <span class="field-label">Agente Commerciale:</span>
                   <span class="field-value">${orderData.agente_comercial}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Catálogo 2026:</span>
-                  <span class="field-value">${orderData.catalogo_2026 ? 'Sim' : 'Não'}</span>
+                  <span class="field-label">Catalogo 2026:</span>
+                  <span class="field-value">${orderData.catalogo_2026 ? 'Sì' : 'No'}</span>
                 </div>
               </div>
 
               <div class="section">
-                <h3>Cor Base</h3>
+                <h3>Colore Base</h3>
                 <div class="field">
-                  <span class="field-label">Cor:</span>
+                  <span class="field-label">Colore:</span>
                   <span class="field-value">${orderData.cor_base}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Acabamento:</span>
+                  <span class="field-label">Finitura:</span>
                   <span class="field-value">${orderData.acabamento_base}${orderData.acabamento_base_rock ? ' + Rock' : ''}</span>
                 </div>
               </div>
 
               <div class="section">
-                <h3>Detalhes</h3>
+                <h3>Accent</h3>
                 <div class="field">
-                  <span class="field-label">Cor:</span>
+                  <span class="field-label">Colore:</span>
                   <span class="field-value">${orderData.cor_detalhes}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Acabamento:</span>
+                  <span class="field-label">Finitura:</span>
                   <span class="field-value">${orderData.acabamento_detalhes}${orderData.acabamento_detalhes_rock ? ' + Rock' : ''}</span>
                 </div>
               </div>
@@ -110,36 +110,36 @@ export async function POST(request: NextRequest) {
               <div class="section">
                 <h3>Logo</h3>
                 <div class="field">
-                  <span class="field-label">Cor:</span>
+                  <span class="field-label">Colore:</span>
                   <span class="field-value">${orderData.cor_logo}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Acabamento:</span>
+                  <span class="field-label">Finitura:</span>
                   <span class="field-value">${orderData.acabamento_logo}${orderData.acabamento_logo_rock ? ' + Rock' : ''}</span>
                 </div>
               </div>
 
               <div class="section">
-                <h3>Letras</h3>
+                <h3>Scritte</h3>
                 <div class="field">
-                  <span class="field-label">Cor:</span>
+                  <span class="field-label">Colore:</span>
                   <span class="field-value">${orderData.cor_letras}</span>
                 </div>
                 <div class="field">
-                  <span class="field-label">Acabamento:</span>
+                  <span class="field-label">Finitura:</span>
                   <span class="field-value">${orderData.acabamento_letras}${orderData.acabamento_letras_rock ? ' + Rock' : ''}</span>
                 </div>
               </div>
 
               ${orderData.pedidos_extras ? `
               <div class="section">
-                <h3>Pedidos Extras</h3>
+                <h3>Richieste Extra</h3>
                 <p>${orderData.pedidos_extras}</p>
               </div>
               ` : ''}
             </div>
             <div class="footer">
-              <p>Sistema de Gestão de Pintura - Officine Mattio</p>
+              <p>Sistema di Gestione Verniciatura - Officine Mattio</p>
             </div>
           </div>
         </body>
