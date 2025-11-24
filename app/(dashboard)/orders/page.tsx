@@ -42,29 +42,26 @@ export default function OrdersPage() {
     }, [])
 
     useEffect(() => {
-        // Filter orders based on search text
-        if (!filterText) {
-            setFilteredOrders(orders)
-            return
-        }
-
+        // Apply both status filter and text filter
         const filtered = orders.filter(order => {
             // Status filter
             if (statusFilter !== 'all' && order.status !== statusFilter) {
                 return false
             }
 
-            // Text filter
-            if (!filterText) return true
+            // Text filter (only if there's search text)
+            if (filterText) {
+                const searchText = filterText.toLowerCase()
+                return (
+                    order.ordem.toLowerCase().includes(searchText) ||
+                    order.matricula_quadro.toLowerCase().includes(searchText) ||
+                    order.modelo.toLowerCase().includes(searchText) ||
+                    order.agente_comercial.toLowerCase().includes(searchText) ||
+                    order.cor_base.toLowerCase().includes(searchText)
+                )
+            }
 
-            const searchText = filterText.toLowerCase()
-            return (
-                order.ordem.toLowerCase().includes(searchText) ||
-                order.matricula_quadro.toLowerCase().includes(searchText) ||
-                order.modelo.toLowerCase().includes(searchText) ||
-                order.agente_comercial.toLowerCase().includes(searchText) ||
-                order.cor_base.toLowerCase().includes(searchText)
-            )
+            return true
         })
         setFilteredOrders(filtered)
     }, [filterText, statusFilter, orders])
