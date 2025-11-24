@@ -7,6 +7,7 @@ import OrderForm from '@/components/OrderForm'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function EditOrderPage() {
+    console.log('[EditOrderPage] Component is rendering! This should appear in console.')
     const { t } = useLanguage()
     const params = useParams()
     const orderId = params.id as string
