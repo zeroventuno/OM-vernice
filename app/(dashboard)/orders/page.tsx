@@ -7,6 +7,7 @@ import { exportToExcel } from '@/lib/excel'
 import { useRouter } from 'next/navigation'
 import { generatePDF } from '@/lib/pdf'
 import EditHistoryModal from '@/components/EditHistoryModal'
+import EditModal from '@/components/EditModal'
 import {
     FileText,
     Download,
@@ -31,6 +32,7 @@ export default function OrdersPage() {
     const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set())
     const [filterText, setFilterText] = useState('')
     const [historyModal, setHistoryModal] = useState<{ orderId: string; history: EditHistory[] } | null>(null)
+    const [editModal, setEditModal] = useState<string | null>(null)
     const [currentUserEmail, setCurrentUserEmail] = useState<string>('')
 
     useEffect(() => {
@@ -459,7 +461,7 @@ export default function OrdersPage() {
                                         <td>
                                             <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
                                                 <button
-                                                    onClick={() => router.push(`/edit-order/${order.id}`)}
+                                                    onClick={() => setEditModal(order.id)}
                                                     className="btn btn-secondary"
                                                     style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                                     title="Editar"
@@ -508,6 +510,19 @@ export default function OrdersPage() {
                     orderId={historyModal.orderId}
                     history={historyModal.history}
                     onClose={() => setHistoryModal(null)}
+                />
+            )}
+
+            {/* Edit Modal */}
+            {editModal && (
+                <EditModal
+                    orderId={editModal}
+                    isOpen={!!editModal}
+                    onClose={() => setEditModal(null)}
+                    onSuccess={() => {
+                        loadOrders()
+                        setEditModal(null)
+                    }}
                 />
             )}
         </div>

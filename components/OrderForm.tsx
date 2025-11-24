@@ -12,9 +12,10 @@ type OrderFormProps = {
     initialData?: Partial<Order>
     isEdit?: boolean
     orderId?: string
+    onSuccess?: () => void
 }
 
-export default function OrderForm({ initialData, isEdit = false, orderId }: OrderFormProps) {
+export default function OrderForm({ initialData, isEdit = false, orderId, onSuccess }: OrderFormProps) {
     const router = useRouter()
     const { t } = useLanguage()
     const [loading, setLoading] = useState(false)
@@ -146,7 +147,11 @@ export default function OrderForm({ initialData, isEdit = false, orderId }: Orde
                 await sendEmailNotification(formData, user.email)
             }
 
-            router.push('/orders')
+            if (onSuccess) {
+                onSuccess()
+            } else {
+                router.push('/orders')
+            }
         } catch (err: any) {
             setError(err.message || t.orders.saveError)
         } finally {
