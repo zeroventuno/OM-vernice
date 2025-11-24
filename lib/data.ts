@@ -34,13 +34,13 @@ export async function getAgents() {
 export async function getColors() {
     const { data, error } = await supabase
         .from('colors')
-        .select('name, hex_code')
-        .order('name')
+        .select('*')
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true }) // Fallback to alphabetical if display_order is same
 
     if (error) {
         console.error('Error fetching colors:', error)
         return []
     }
-
     return data
 }
