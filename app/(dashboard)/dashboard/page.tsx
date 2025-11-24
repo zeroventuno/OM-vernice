@@ -23,6 +23,18 @@ export default function DashboardPage() {
                     .from('orders')
                     .select('*', { count: 'exact', head: true })
 
+                // Get pending orders
+                const { count: pendingOrders } = await supabase
+                    .from('orders')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('status', 'pending')
+
+                // Get completed orders
+                const { count: completedOrders } = await supabase
+                    .from('orders')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('status', 'completed')
+
                 // Get recent orders
                 const { data: recentOrders } = await supabase
                     .from('orders')
@@ -32,8 +44,8 @@ export default function DashboardPage() {
 
                 setStats({
                     totalOrders: totalOrders || 0,
-                    pendingOrders: 0,
-                    completedOrders: 0,
+                    pendingOrders: pendingOrders || 0,
+                    completedOrders: completedOrders || 0,
                     recentOrders: recentOrders || []
                 })
             } catch (error) {

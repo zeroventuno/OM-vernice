@@ -346,39 +346,6 @@ export default function OrdersPage() {
                 </a>
             </div>
 
-            {/* KPI Cards */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: 'var(--spacing-lg)',
-                marginBottom: 'var(--spacing-xl)'
-            }}>
-                <div className="card" style={{ padding: 'var(--spacing-lg)' }}>
-                    <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                        Total de Pedidos
-                    </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
-                        {orders.length}
-                    </div>
-                </div>
-                <div className="card" style={{ padding: 'var(--spacing-lg)', borderLeft: '4px solid var(--color-warning)' }}>
-                    <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                        Pedidos Pendentes
-                    </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-warning)' }}>
-                        {orders.filter(o => o.status === 'pending').length}
-                    </div>
-                </div>
-                <div className="card" style={{ padding: 'var(--spacing-lg)', borderLeft: '4px solid var(--color-success)' }}>
-                    <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                        Pedidos Completos
-                    </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-success)' }}>
-                        {orders.filter(o => o.status === 'completed').length}
-                    </div>
-                </div>
-            </div>
-
             {/* Toolbar */}
             <div className="card" style={{ marginBottom: 'var(--spacing-lg)' }}>
                 <div style={{
