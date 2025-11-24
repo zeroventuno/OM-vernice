@@ -44,30 +44,9 @@ export async function signIn(email: string, password: string) {
 
     if (error) return { error }
 
-    // Check if user is approved
-    const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('status, role')
-        .eq('id', data.user.id)
-        .single()
-
-    if (userError) {
-        await supabase.auth.signOut()
-        return { error: { message: 'Erro ao verificar status do usuário.' } }
-    }
-
-    if (userData.status !== 'approved') {
-        await supabase.auth.signOut()
-        return {
-            error: {
-                message: userData.status === 'pending'
-                    ? 'Sua conta está pendente de aprovação. Aguarde a aprovação de um administrador.'
-                    : 'Sua conta foi rejeitada. Entre em contato com o administrador.'
-            }
-        }
-    }
-
-    return { data: { ...data, user: { ...data.user, role: userData.role } } }
+    // Status verification is now handled by getCurrentUser() in the dashboard layout
+    // This avoids RLS conflicts during the login process
+    return { data }
 }
 
 export async function signOut() {
