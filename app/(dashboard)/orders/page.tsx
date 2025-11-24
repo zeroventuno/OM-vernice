@@ -459,7 +459,7 @@ export default function OrdersPage() {
                                         <td>
                                             <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
                                                 <button
-                                                    onClick={() => router.push(`/orders/${order.id}/edit`)}
+                                                    onClick={() => router.push(`/edit-order/${order.id}`)}
                                                     className="btn btn-secondary"
                                                     style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                                                     title="Editar"
