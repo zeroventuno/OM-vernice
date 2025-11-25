@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
+import Footer from '@/components/Footer'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 
 export default function DashboardLayout({
@@ -74,12 +75,19 @@ export default function DashboardLayout({
                 <main style={{
                     marginLeft: '280px',
                     flex: 1,
-                    padding: 'var(--spacing-xl)',
                     background: 'var(--color-bg)',
                     overflowY: 'auto',
-                    height: '100vh'
+                    height: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column'
                 }}>
-                    {children}
+                    <div style={{
+                        flex: 1,
+                        padding: 'var(--spacing-xl)'
+                    }}>
+                        {children}
+                    </div>
+                    <Footer />
                 </main>
             </div>
         </LanguageProvider>

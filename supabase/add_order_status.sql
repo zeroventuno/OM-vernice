@@ -1,17 +1,28 @@
 -- Add status column to orders table
-ALTER TABLE public.orders 
-ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'pending';
+-- This migration is now idempotent (can be run multiple times safely)
 
--- Add check constraint to ensure valid status values
-ALTER TABLE public.orders 
-ADD CONSTRAINT orders_status_check 
-CHECK (status IN ('pending', 'completed'));
+-- Add status column if it doesn't exist
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'orders' AND column_name = 'status'
+    ) THEN
+        ALTER TABLE orders 
+        ADD COLUMN status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'completed'));
+    END IF;
+END $$;
 
--- Update existing orders to have 'pending' status (if any were null before NOT NULL constraint)
--- Since we added NOT NULL DEFAULT 'pending', existing rows get 'pending' automatically.
--- But good to be explicit if we were doing this in steps.
+-- Update existing NULL values to 'pending' (if any)
+UPDATE orders SET status = 'pending' WHERE status IS NULL;
 
--- Create index for faster filtering by status
+-- Create index for better query performance (IF NOT EXISTS)
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+
+-- Verify the changes
+SELECT column_name, data_type, column_default, is_nullable
+FROM information_schema.columns
+WHERE table_name = 'orders' AND column_name = 'status';
 CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
 
 DO $$
