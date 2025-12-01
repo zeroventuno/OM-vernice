@@ -47,6 +47,7 @@ export default function OrderForm({ initialData, isEdit = false, orderId, onSucc
         acabamento_letras: initialData?.acabamento_letras || 'Opaco',
         acabamento_letras_rock: initialData?.acabamento_letras_rock || false,
         pedidos_extras: initialData?.pedidos_extras || '',
+        urgente: initialData?.urgente || false,
     })
 
     useEffect(() => {
@@ -316,6 +317,20 @@ export default function OrderForm({ initialData, isEdit = false, orderId, onSucc
                                 onChange={(e) => handleChange('catalogo_2026', e.target.checked)}
                             />
                             <span>{t.orders.catalog2026}</span>
+                        </label>
+                    </div>
+                </div>
+
+                {/* Urgente */}
+                <div className="form-group">
+                    <div style={{ paddingTop: '2rem' }}>
+                        <label className="form-checkbox" style={{ color: 'var(--color-error)', fontWeight: 'bold' }}>
+                            <input
+                                type="checkbox"
+                                checked={formData.urgente}
+                                onChange={(e) => handleChange('urgente', e.target.checked)}
+                            />
+                            <span>Urgente / Prioridade Alta</span>
                         </label>
                     </div>
                 </div>

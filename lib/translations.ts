@@ -169,7 +169,7 @@ export const translations = {
             noUsers: 'Nenhum usuário encontrado',
             revoke: 'Revogar',
             registeredAt: 'Data de Registro',
-        }
+        },
     },
     'it': {
         common: {

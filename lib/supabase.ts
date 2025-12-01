@@ -39,6 +39,7 @@ export type Order = {
     created_at: string
     updated_at: string
     status: 'pending' | 'completed'
+    urgente: boolean
 }
 
 export type EditHistory = {

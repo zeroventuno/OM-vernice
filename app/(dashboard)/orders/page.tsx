@@ -470,7 +470,14 @@ export default function OrdersPage() {
                                     <tr
                                         key={order.id}
                                         style={{
-                                            backgroundColor: index % 2 === 0 ? 'white' : 'var(--color-bg-secondary)'
+                                            backgroundColor: order.status === 'completed'
+                                                ? 'rgba(72, 187, 120, 0.15)'
+                                                : order.status === 'pending'
+                                                    ? 'rgba(255, 165, 0, 0.15)'
+                                                    : index % 2 === 0 ? 'white' : 'var(--color-bg-secondary)',
+                                            border: order.urgente ? '2px solid #ef4444' : 'none',
+                                            color: order.urgente ? '#b91c1c' : 'inherit',
+                                            fontWeight: order.urgente ? 500 : 'normal'
                                         }}
                                     >
                                         <td>
