@@ -19,35 +19,35 @@ export default function EditModal({ orderId, isOpen, onClose, onSuccess }: EditM
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        async function loadOrder() {
+            console.log('[EditModal] Loading order:', orderId)
+            setLoading(true)
+            try {
+                const { data, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('id', orderId)
+                    .single()
+
+                if (error) {
+                    console.error('[EditModal] Error loading order:', error)
+                    throw error
+                }
+
+                console.log('[EditModal] Order loaded successfully')
+                setOrder(data)
+            } catch (error) {
+                console.error('[EditModal] Failed to load order:', error)
+                setOrder(null)
+            } finally {
+                setLoading(false)
+            }
+        }
+
         if (isOpen && orderId) {
             loadOrder()
         }
     }, [isOpen, orderId])
-
-    async function loadOrder() {
-        console.log('[EditModal] Loading order:', orderId)
-        setLoading(true)
-        try {
-            const { data, error } = await supabase
-                .from('orders')
-                .select('*')
-                .eq('id', orderId)
-                .single()
-
-            if (error) {
-                console.error('[EditModal] Error loading order:', error)
-                throw error
-            }
-
-            console.log('[EditModal] Order loaded successfully')
-            setOrder(data)
-        } catch (error) {
-            console.error('[EditModal] Failed to load order:', error)
-            setOrder(null)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     if (!isOpen) return null
 
